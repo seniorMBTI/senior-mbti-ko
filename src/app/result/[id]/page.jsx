@@ -655,10 +655,15 @@ export default function ResultPage() {
         }
 
         .type-title-main {
-          font-size: clamp(2.5rem, 6vw, 4rem);
-          font-weight: 800;
-          margin: 0 0 16px 0;
-          text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+          font-size: clamp(3rem, 8vw, 6rem);
+          font-weight: 900;
+          margin: 0 0 24px 0;
+          text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+          background: linear-gradient(45deg, #FFD700, #FFA500, #FF6B6B);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          background-clip: text;
+          filter: drop-shadow(0 0 30px rgba(255, 215, 0, 0.5));
         }
 
         .type-subtitle-main {
@@ -771,11 +776,29 @@ export default function ResultPage() {
 
         /* Tab Content */
         .tab-content-wrapper {
-          background: white;
-          border-radius: 24px;
-          box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-          padding: 48px;
+          background: linear-gradient(135deg, 
+            rgba(255, 255, 255, 0.95) 0%, 
+            rgba(248, 250, 252, 0.95) 100%);
+          backdrop-filter: blur(20px);
+          border: 1px solid rgba(255, 255, 255, 0.3);
+          border-radius: 32px;
+          box-shadow: 
+            0 32px 64px rgba(0, 0, 0, 0.12),
+            inset 0 1px 0 rgba(255, 255, 255, 0.4);
+          padding: 56px;
           margin-bottom: 48px;
+          position: relative;
+          overflow: hidden;
+        }
+        
+        .tab-content-wrapper::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          height: 1px;
+          background: linear-gradient(90deg, transparent, rgba(79, 70, 229, 0.5), transparent);
         }
 
         .tab-content h4 {

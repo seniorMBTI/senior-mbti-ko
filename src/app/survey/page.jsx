@@ -337,6 +337,7 @@ export default function SurveyPage() {
       <div className="question-card">
         <div className="question-category">
           {currentQ.category} 차원 · 제 {currentQuestion + 1} 문
+        </div>
         
         <h2 className="question-text">
           {currentQ.text}
@@ -353,7 +354,6 @@ export default function SurveyPage() {
               <div className="choice-text">{choice.text}</div>
             </button>
           ))}
-            </div>
         </div>
       </div>
 
