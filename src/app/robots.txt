@@ -1,0 +1,49 @@
+# 시니어 MBTI 로봇 크롤링 최적화
+
+User-agent: *
+Allow: /
+
+# 사이트맵 위치
+Sitemap: https://senior-mbti-qwnq47jj8-seniormbtis-projects.vercel.app/sitemap.xml
+
+# 크롤링 지연 (서버 부하 방지)
+Crawl-delay: 1
+
+# 우선순위 높은 페이지들
+Allow: /
+Allow: /survey
+Allow: /result/*
+
+# Google 검색엔진 최적화
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 0
+
+# Bing 검색엔진 최적화  
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1
+
+# Yandex 검색엔진 최적화
+User-agent: Yandex
+Allow: /
+Crawl-delay: 2
+
+# 불필요한 파일 차단
+Disallow: /api/
+Disallow: /_next/
+Disallow: /node_modules/
+Disallow: /.git/
+Disallow: /package.json
+Disallow: /next.config.js
+
+# 이미지 크롤링 허용
+Allow: /images/
+Allow: *.jpg
+Allow: *.jpeg  
+Allow: *.png
+Allow: *.webp
+Allow: *.svg
+
+# RSS 피드 (향후 확장)
+# Sitemap: https://senior-mbti-qwnq47jj8-seniormbtis-projects.vercel.app/rss.xml

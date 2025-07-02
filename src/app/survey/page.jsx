@@ -249,7 +249,13 @@ export default function SurveyPage() {
   const handleNext = () => {
     if (selectedChoice === null) return;
 
-    const newAnswers = [...answers, selectedChoice];
+    const newAnswers = [...answers, {
+      questionId: questions[currentQuestion].id,
+      choice: selectedChoice,
+      type: questions[currentQuestion].choices.find(c => c.id === selectedChoice).type,
+      category: questions[currentQuestion].category
+    }];
+    
     setAnswers(newAnswers);
     setSelectedChoice(null);
 
@@ -272,31 +278,44 @@ export default function SurveyPage() {
   const handleSubmit = async (finalAnswers) => {
     setIsSubmitting(true);
     
-    // 시니어 친화적 로딩 시간
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    
-    // MBTI 점수 계산 (24개 문항, 각 차원별 6문항)
-    const scores = { E: 0, I: 0, S: 0, N: 0, T: 0, F: 0, J: 0, P: 0 };
-    
-    finalAnswers.forEach((answer, index) => {
-      const question = questions[index];
-      const choice = question.choices.find(c => c.id === answer);
-      if (choice) {
-        scores[choice.type]++;
-      }
-    });
-    
-    // MBTI 유형 결정
-    const mbtiType = 
-      (scores.E > scores.I ? 'E' : 'I') +
-      (scores.S > scores.N ? 'S' : 'N') +
-      (scores.T > scores.F ? 'T' : 'F') +
-      (scores.J > scores.P ? 'J' : 'P');
-    
-    console.log('MBTI 점수:', scores);
-    console.log('최종 유형:', mbtiType);
-    
-    router.push(`/result/${mbtiType}`);
+    try {
+      // MBTI 유형 계산
+      const scores = { E: 0, I: 0, S: 0, N: 0, T: 0, F: 0, J: 0, P: 0 };
+      
+      finalAnswers.forEach(answer => {
+        scores[answer.type]++;
+      });
+
+      const mbtiType = 
+        (scores.E > scores.I ? 'E' : 'I') +
+        (scores.S > scores.N ? 'S' : 'N') +
+        (scores.T > scores.F ? 'T' : 'F') +
+        (scores.J > scores.P ? 'J' : 'P');
+
+      // 결과 ID 생성
+      const resultId = Date.now().toString();
+      
+      // localStorage에 저장
+      const resultData = {
+        mbtiType,
+        scores,
+        answers: finalAnswers,
+        completedAt: new Date().toISOString(),
+        language: 'ko'
+      };
+      
+      localStorage.setItem(`mbti-result-${resultId}`, JSON.stringify(resultData));
+      
+      // 2초 후 자동으로 결과 페이지로 이동
+      setTimeout(() => {
+        router.push(`/result/${resultId}`);
+      }, 2000);
+      
+    } catch (error) {
+      console.error('Error calculating results:', error);
+      alert('결과 계산 중 오류가 발생했습니다. 다시 시도해주세요.');
+      setIsSubmitting(false);
+    }
   };
 
   // Keyboard navigation
@@ -319,6 +338,17 @@ export default function SurveyPage() {
 
   return (
     <div className="survey-container">
+      {/* SEO 최적화 메인 헤더 */}
+      <header className="seo-header">
+        <h1 className="visually-hidden">시니어 MBTI 성격 테스트 질문 {currentQuestion + 1}번 - 중장년 심리 분석 설문조사</h1>
+        <nav className="breadcrumb-nav visually-hidden">
+          <ol>
+            <li><a href="/">시니어 MBTI 홈</a></li>
+            <li>성격 테스트 설문조사 ({Math.round(progress)}% 진행)</li>
+          </ol>
+        </nav>
+      </header>
+
       {/* 진행도 바 */}
       <div className="progress-header">
         <div className="progress-info">
@@ -334,7 +364,7 @@ export default function SurveyPage() {
       </div>
 
       {/* 질문 카드 */}
-      <div className="question-card">
+      <main className="question-card">
         <div className="question-category">
           {currentQ.category} 차원 · 제 {currentQuestion + 1} 문
         </div>
@@ -342,6 +372,12 @@ export default function SurveyPage() {
         <h2 className="question-text">
           {currentQ.text}
         </h2>
+        
+        <div className="question-context">
+          <p className="question-description">
+            시니어 라이프스타일에 가장 잘 맞는 선택을 해주세요. 정답은 없으며, 진솔한 마음으로 답해주시면 됩니다.
+          </p>
+        </div>
 
         <div className="choices-container">
           {currentQ.choices.map((choice) => (
@@ -355,7 +391,41 @@ export default function SurveyPage() {
             </button>
           ))}
         </div>
-      </div>
+        
+        <div className="question-benefits">
+          <h3 className="benefits-title">이 질문이 알려주는 것</h3>
+          <ul className="benefits-list">
+            {currentQ.category === 'E/I' && (
+              <>
+                <li>해외 여행이나 대귀모 모임에서의 에너지 방식</li>
+                <li>은퇴 후 사회적 활동 및 취미 선택</li>
+                <li>가족과 친구들과의 소통 방식</li>
+              </>
+            )}
+            {currentQ.category === 'S/N' && (
+              <>
+                <li>새로운 기술이나 취미 학습 방식</li>
+                <li>인생 경험을 활용하는 접근법</li>
+                <li>미래 계획과 대화 주제 선호도</li>
+              </>
+            )}
+            {currentQ.category === 'T/F' && (
+              <>
+                <li>가족 및 자녀와의 갈등 해결 방식</li>
+                <li>중요한 인생 결정에서의 우선순위</li>
+                <li>지역사회 역할과 자원봉사 스타일</li>
+              </>
+            )}
+            {currentQ.category === 'J/P' && (
+              <>
+                <li>은퇴 후 일상 시간 관리 및 루틴</li>
+                <li>여행과 레저 활동 계획 스타일</li>
+                <li>건강 관리와 약속 지키기 방식</li>
+              </>
+            )}
+          </ul>
+        </div>
+      </main>
 
       {/* 네비게이션 버튼 */}
       <div className="navigation-buttons">
@@ -720,6 +790,97 @@ export default function SurveyPage() {
           transform: none;
         }
 
+        /* SEO Header */
+        .seo-header {
+          position: absolute;
+          top: 0;
+          left: 0;
+        }
+
+        .visually-hidden {
+          position: absolute;
+          width: 1px;
+          height: 1px;
+          padding: 0;
+          margin: -1px;
+          overflow: hidden;
+          clip: rect(0, 0, 0, 0);
+          white-space: nowrap;
+          border: 0;
+        }
+
+        .breadcrumb-nav ol {
+          list-style: none;
+          padding: 0;
+          margin: 0;
+        }
+
+        /* Question Context */
+        .question-context {
+          margin: 24px 0;
+          padding: 20px;
+          background: rgba(79, 70, 229, 0.05);
+          border-radius: 12px;
+          border-left: 4px solid #4F46E5;
+        }
+
+        .question-description {
+          font-size: 16px;
+          color: #374151;
+          line-height: 1.6;
+          margin: 0;
+          font-weight: 500;
+        }
+
+        /* Question Benefits */
+        .question-benefits {
+          margin-top: 32px;
+          padding: 24px;
+          background: rgba(102, 126, 234, 0.05);
+          border-radius: 16px;
+          border: 1px solid rgba(102, 126, 234, 0.1);
+        }
+
+        .benefits-title {
+          font-size: 20px;
+          font-weight: 700;
+          color: #1F2937;
+          margin-bottom: 16px;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+        }
+
+        .benefits-title::before {
+          content: '🎯';
+          font-size: 18px;
+        }
+
+        .benefits-list {
+          list-style: none;
+          padding: 0;
+          margin: 0;
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+        }
+
+        .benefits-list li {
+          font-size: 14px;
+          color: #374151;
+          line-height: 1.5;
+          padding-left: 20px;
+          position: relative;
+        }
+
+        .benefits-list li::before {
+          content: '✅';
+          position: absolute;
+          left: 0;
+          top: 0;
+          font-size: 12px;
+        }
+
         /* 반응형 디자인 */
         @media (max-width: 768px) {
           .survey-container {
@@ -762,6 +923,24 @@ export default function SurveyPage() {
           .nav-button {
             font-size: 18px;
             padding: 18px 24px;
+          }
+
+          .question-context {
+            margin: 16px 0;
+            padding: 16px;
+          }
+
+          .question-benefits {
+            margin-top: 24px;
+            padding: 20px;
+          }
+
+          .benefits-title {
+            font-size: 18px;
+          }
+
+          .benefits-list li {
+            font-size: 13px;
           }
         }
 
