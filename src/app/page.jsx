@@ -309,7 +309,7 @@ export default function HomePage() {
 
         .language-selector-wrapper {
           position: relative;
-          z-index: 10;
+          z-index: 999999;
           display: flex;
           justify-content: flex-end;
           padding: 24px 0;
