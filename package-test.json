@@ -1,0 +1,12 @@
+{
+  "name": "senior-mbti-test",
+  "version": "1.0.0",
+  "description": "Senior MBTI 리디렉션 테스트",
+  "scripts": {
+    "test": "node test-mbti-redirect.js",
+    "test:install": "npm install && npx playwright install chromium"
+  },
+  "devDependencies": {
+    "playwright": "^1.40.0"
+  }
+}

@@ -292,24 +292,30 @@ export default function SurveyPage() {
         (scores.T > scores.F ? 'T' : 'F') +
         (scores.J > scores.P ? 'J' : 'P');
 
-      // 결과 ID 생성
-      const resultId = Date.now().toString();
+      // MBTI 유형 검증
+      const validTypes = ['INTJ', 'INTP', 'ENTJ', 'ENTP', 'INFJ', 'INFP', 'ENFJ', 'ENFP', 
+                         'ISTJ', 'ISFJ', 'ESTJ', 'ESFJ', 'ISTP', 'ISFP', 'ESTP', 'ESFP'];
       
-      // localStorage에 저장
-      const resultData = {
-        mbtiType,
-        scores,
-        answers: finalAnswers,
-        completedAt: new Date().toISOString(),
-        language: 'ko'
-      };
-      
-      localStorage.setItem(`mbti-result-${resultId}`, JSON.stringify(resultData));
-      
-      // 2초 후 자동으로 결과 페이지로 이동
-      setTimeout(() => {
-        router.push(`/result/${resultId}`);
-      }, 2000);
+      if (validTypes.includes(mbtiType)) {
+        // localStorage에 저장 (백업용)
+        const resultData = {
+          mbtiType,
+          scores,
+          answers: finalAnswers,
+          completedAt: new Date().toISOString(),
+          language: 'ko'
+        };
+        
+        localStorage.setItem(`mbti-result-${mbtiType}`, JSON.stringify(resultData));
+        
+        // 안정적인 네비게이션을 위한 추가 지연
+        await new Promise(resolve => setTimeout(resolve, 200));
+        
+        // replace를 사용하여 뒤로가기 문제 방지
+        router.replace(`/result/${mbtiType.toLowerCase()}`);
+      } else {
+        throw new Error(`Invalid MBTI type calculated: ${mbtiType}`);
+      }
       
     } catch (error) {
       console.error('Error calculating results:', error);
