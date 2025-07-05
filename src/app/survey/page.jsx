@@ -259,9 +259,13 @@ export default function SurveyPage() {
     setAnswers(newAnswers);
     setSelectedChoice(null);
 
+    console.log(`Current Question: ${currentQuestion + 1}, Total Questions: ${questions.length}`);
+    console.log(`New Answers Length: ${newAnswers.length}`);
+
     if (currentQuestion < questions.length - 1) {
       setCurrentQuestion(currentQuestion + 1);
     } else {
+      console.log('Last question completed, calling handleSubmit with answers:', newAnswers);
       handleSubmit(newAnswers);
     }
   };
@@ -276,6 +280,7 @@ export default function SurveyPage() {
   };
 
   const handleSubmit = async (finalAnswers) => {
+    console.log('handleSubmit called with answers:', finalAnswers);
     setIsSubmitting(true);
     
     try {
@@ -286,11 +291,15 @@ export default function SurveyPage() {
         scores[answer.type]++;
       });
 
+      console.log('Calculated scores:', scores);
+
       const mbtiType = 
         (scores.E > scores.I ? 'E' : 'I') +
         (scores.S > scores.N ? 'S' : 'N') +
         (scores.T > scores.F ? 'T' : 'F') +
         (scores.J > scores.P ? 'J' : 'P');
+
+      console.log('Calculated MBTI Type:', mbtiType);
 
       // MBTI 유형 검증
       const validTypes = ['INTJ', 'INTP', 'ENTJ', 'ENTP', 'INFJ', 'INFP', 'ENFJ', 'ENFP', 
@@ -307,6 +316,8 @@ export default function SurveyPage() {
         };
         
         localStorage.setItem(`mbti-result-${mbtiType}`, JSON.stringify(resultData));
+        
+        console.log('About to redirect to:', `/result/${mbtiType.toLowerCase()}`);
         
         // 안정적인 네비게이션을 위한 추가 지연
         await new Promise(resolve => setTimeout(resolve, 200));
