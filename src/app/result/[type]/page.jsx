@@ -3,7 +3,7 @@
 import { useParams, useRouter } from 'next/navigation';
 import { useState, useEffect, useRef } from 'react';
 
-// MBTI 유형별 상성 정보
+// MBTI 유형별 상성 정보를 모듈 레벨로 이동
 const mbtiCompatibility = {
   'INTJ': {
     bestMatch: ['ENFP', 'ENTP', 'INFJ'],
