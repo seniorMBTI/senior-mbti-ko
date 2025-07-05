@@ -265,8 +265,8 @@ export default function SurveyPage() {
     if (currentQuestion < questions.length - 1) {
       setCurrentQuestion(currentQuestion + 1);
     } else {
-      console.log('Last question completed, calling handleSubmit with answers:', newAnswers);
-      handleSubmit(newAnswers);
+      console.log('Last question completed, calling calculateAndRedirect with answers:', newAnswers);
+      calculateAndRedirect(newAnswers);
     }
   };
 
@@ -279,7 +279,7 @@ export default function SurveyPage() {
     }
   };
 
-  const handleSubmit = async (finalAnswers) => {
+  const calculateAndRedirect = async (finalAnswers) => {
     console.log('handleSubmit called with answers:', finalAnswers);
     setIsSubmitting(true);
     
