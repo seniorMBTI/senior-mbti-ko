@@ -341,8 +341,14 @@ export default function ResultPage() {
   const shareButtonRef = useRef(null);
   const [modalPosition, setModalPosition] = useState({ top: '50%', left: '50%' });
 
+  // 클라이언트 마운트 상태 설정
   useEffect(() => {
     setMounted(true);
+  }, []);
+
+  // 마운트 완료 후 데이터 처리
+  useEffect(() => {
+    if (!mounted) return; // 클라이언트에서만 실행
     
     // URL 파라미터에서 직접 MBTI 타입 가져오기
     const mbtiType = params.type?.toUpperCase();
@@ -355,11 +361,27 @@ export default function ResultPage() {
       
       if (validTypes.includes(mbtiType)) {
         console.log('Valid MBTI Type, setting result data:', mbtiType);
+        
+        // localStorage에서 기존 결과 확인 (클라이언트에서만)
+        let storedResult = null;
+        try {
+          if (typeof window !== 'undefined') {
+            storedResult = localStorage.getItem(`mbti-result-${mbtiType}`);
+            if (storedResult) {
+              storedResult = JSON.parse(storedResult);
+            }
+          }
+        } catch (error) {
+          console.warn('Error reading localStorage:', error);
+        }
+        
         // MBTI 타입 파라미터로부터 결과 데이터 생성
         setResultData({
           mbtiType: mbtiType,
-          timestamp: Date.now(),
-          isDirectLink: true
+          timestamp: storedResult?.timestamp || Date.now(),
+          isDirectLink: true,
+          scores: storedResult?.scores || null,
+          answers: storedResult?.answers || null
         });
       } else {
         console.log('Invalid MBTI Type, redirecting to home');
@@ -370,7 +392,7 @@ export default function ResultPage() {
       console.log('No MBTI Type in URL, redirecting to home');
       router.push('/');
     }
-  }, [params.type, router]);
+  }, [mounted, params.type, router]);
 
   // MBTI 결과에 따른 동적 메타태그 업데이트
   useEffect(() => {
