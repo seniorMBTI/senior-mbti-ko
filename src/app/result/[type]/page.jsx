@@ -522,7 +522,8 @@ export default function ResultPage() {
     );
   }
 
-  const typeInfo = mbtiTypes[resultData?.mbtiType] || mbtiTypes['INTJ'];
+  const mbtiTypeFromUrl = params.type?.toUpperCase();
+  const typeInfo = mbtiTypes[mbtiTypeFromUrl] || mbtiTypes[resultData?.mbtiType] || mbtiTypes['INTJ'];
 
   return (
     <div className="result-container">
@@ -633,12 +634,12 @@ export default function ResultPage() {
               <p>깊이 있고 의미 있는 관계를 만들어갈 수 있는 유형</p>
             </div>
             <div className="card-content">
-              {mbtiCompatibility[resultData.mbtiType]?.bestMatch.map((type, index) => (
+              {typeInfo?.type && mbtiCompatibility[typeInfo.type]?.bestMatch?.map((type, index) => (
                 <div key={index} className="compatibility-item">
                   <span className="type-badge-small">{type}</span>
-                  <span className="type-name">{mbtiTypes[type]?.title}</span>
+                  <span className="type-name">{mbtiTypes[type]?.title || type}</span>
                 </div>
-              ))}
+              )) || []}
             </div>
           </div>
 
@@ -649,12 +650,12 @@ export default function ResultPage() {
               <p>편안하고 안정적인 관계를 유지할 수 있는 유형</p>
             </div>
             <div className="card-content">
-              {mbtiCompatibility[resultData.mbtiType]?.goodMatch.map((type, index) => (
+              {typeInfo?.type && mbtiCompatibility[typeInfo.type]?.goodMatch?.map((type, index) => (
                 <div key={index} className="compatibility-item">
                   <span className="type-badge-small">{type}</span>
-                  <span className="type-name">{mbtiTypes[type]?.title}</span>
+                  <span className="type-name">{mbtiTypes[type]?.title || type}</span>
                 </div>
-              ))}
+              )) || []}
             </div>
           </div>
 
@@ -665,12 +666,12 @@ export default function ResultPage() {
               <p>서로 다른 점을 이해하며 성장할 수 있는 유형</p>
             </div>
             <div className="card-content">
-              {mbtiCompatibility[resultData.mbtiType]?.challengingMatch.map((type, index) => (
+              {typeInfo?.type && mbtiCompatibility[typeInfo.type]?.challengingMatch?.map((type, index) => (
                 <div key={index} className="compatibility-item">
                   <span className="type-badge-small">{type}</span>
-                  <span className="type-name">{mbtiTypes[type]?.title}</span>
+                  <span className="type-name">{mbtiTypes[type]?.title || type}</span>
                 </div>
-              ))}
+              )) || []}
             </div>
           </div>
         </div>
