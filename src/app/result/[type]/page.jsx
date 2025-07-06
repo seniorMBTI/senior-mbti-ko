@@ -334,25 +334,16 @@ const mbtiTypes = {
 export default function ResultPage() {
   const params = useParams();
   const router = useRouter();
-  const [mounted, setMounted] = useState(false);
   const [resultData, setResultData] = useState(null);
   const [showShareDialog, setShowShareDialog] = useState(false);
   const [showCopySuccess, setShowCopySuccess] = useState(false);
   const shareButtonRef = useRef(null);
   const [modalPosition, setModalPosition] = useState({ top: '50%', left: '50%' });
 
-  // 클라이언트 마운트 상태 설정
+  // 서버 사이드 호환 데이터 처리
   useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  // 마운트 완료 후 데이터 처리
-  useEffect(() => {
-    if (!mounted) return; // 클라이언트에서만 실행
-    
     // URL 파라미터에서 직접 MBTI 타입 가져오기
     const mbtiType = params.type?.toUpperCase();
-    console.log('URL MBTI Type:', mbtiType);
     
     if (mbtiType) {
       // 유효한 MBTI 타입인지 확인
@@ -360,8 +351,6 @@ export default function ResultPage() {
                          'ISTJ', 'ISFJ', 'ESTJ', 'ESFJ', 'ISTP', 'ISFP', 'ESTP', 'ESFP'];
       
       if (validTypes.includes(mbtiType)) {
-        console.log('Valid MBTI Type, setting result data:', mbtiType);
-        
         // localStorage에서 기존 결과 확인 (클라이언트에서만)
         let storedResult = null;
         try {
@@ -384,19 +373,17 @@ export default function ResultPage() {
           answers: storedResult?.answers || null
         });
       } else {
-        console.log('Invalid MBTI Type, redirecting to home');
         // 유효하지 않은 MBTI 타입이면 홈으로 리디렉션
         router.push('/');
       }
     } else {
-      console.log('No MBTI Type in URL, redirecting to home');
       router.push('/');
     }
-  }, [mounted, params.type, router]);
+  }, [params.type, router]);
 
-  // MBTI 결과에 따른 동적 메타태그 업데이트
+  // 클라이언트 사이드 메타태그 업데이트 (서버 사이드 호환)
   useEffect(() => {
-    if (resultData && mounted) {
+    if (resultData && typeof window !== 'undefined') {
       const mbtiType = resultData.mbtiType;
       const mbtiInfo = mbtiTypes[mbtiType];
       
@@ -404,28 +391,36 @@ export default function ResultPage() {
         // 페이지 제목 업데이트
         document.title = `${mbtiType} ${mbtiInfo.title} - 시니어 MBTI 결과`;
         
-        // 오픈 그래프 메타태그 업데이트
+        // 메타태그 업데이트 함수들
         const updateMetaTag = (property, content) => {
-          let meta = document.querySelector(`meta[property="${property}"]`);
-          if (!meta) {
-            meta = document.createElement('meta');
-            meta.setAttribute('property', property);
-            document.head.appendChild(meta);
+          try {
+            let meta = document.querySelector(`meta[property="${property}"]`);
+            if (!meta) {
+              meta = document.createElement('meta');
+              meta.setAttribute('property', property);
+              document.head.appendChild(meta);
+            }
+            meta.setAttribute('content', content);
+          } catch (error) {
+            console.warn('Meta tag update failed:', error);
           }
-          meta.setAttribute('content', content);
         };
 
         const updateNameMetaTag = (name, content) => {
-          let meta = document.querySelector(`meta[name="${name}"]`);
-          if (!meta) {
-            meta = document.createElement('meta');
-            meta.setAttribute('name', name);
-            document.head.appendChild(meta);
+          try {
+            let meta = document.querySelector(`meta[name="${name}"]`);
+            if (!meta) {
+              meta = document.createElement('meta');
+              meta.setAttribute('name', name);
+              document.head.appendChild(meta);
+            }
+            meta.setAttribute('content', content);
+          } catch (error) {
+            console.warn('Name meta tag update failed:', error);
           }
-          meta.setAttribute('content', content);
         };
 
-        // MBTI 유형별 개별 이미지로 메타태그 업데이트 (프로덕션 도메인 사용)
+        // MBTI 유형별 메타태그 업데이트
         updateMetaTag('og:title', `${mbtiType} ${mbtiInfo.title} - 시니어 MBTI 결과`);
         updateMetaTag('og:description', `당신의 MBTI는 ${mbtiType} ${mbtiInfo.title}입니다. ${mbtiInfo.subtitle} ${mbtiInfo.description.substring(0, 100)}...`);
         updateMetaTag('og:image', `https://kr.seniormbti.com/${mbtiType}-kr.png`);
@@ -439,11 +434,11 @@ export default function ResultPage() {
         updateNameMetaTag('twitter:card', 'summary_large_image');
       }
     }
-  }, [resultData, mounted]);
+  }, [resultData]);
 
 
   const copyResultLink = () => {
-    if (mounted && typeof window !== 'undefined' && resultData) {
+    if (typeof window !== 'undefined' && resultData) {
       // 깔끔한 MBTI 타입 URL로 공유
       const shareUrl = `${window.location.origin}/result/${resultData.mbtiType.toLowerCase()}`;
       navigator.clipboard.writeText(shareUrl);
@@ -491,7 +486,7 @@ export default function ResultPage() {
     setShowShareDialog(true);
   };
 
-  if (!mounted || !resultData) {
+  if (!resultData) {
     return (
       <div className="loading-container">
         <div className="loading-spinner"></div>
