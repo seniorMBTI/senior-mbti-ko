@@ -52,7 +52,7 @@ export async function generateMetadata({ params }) {
       description: `${resultId} 성격 유형의 상세한 분석 결과입니다. 내 MBTI와 잘 맞는 성향, 잘 맞지 않는 성향을 확인해보세요.`,
       type: 'website',
       locale: 'ko_KR',
-      url: `https://senior-mbti-qwnq47jj8-seniormbtis-projects.vercel.app/result/${resultId}`,
+      url: `https://kr.seniormbti.com/result/${resultId}`,
       siteName: '시니어 MBTI',
       images: [
         {
@@ -115,7 +115,7 @@ export default function ResultLayout({ children, params }) {
             "provider": {
               "@type": "Organization",
               "name": "시니어 MBTI 전문연구팀",
-              "url": "https://senior-mbti-qwnq47jj8-seniormbtis-projects.vercel.app"
+              "url": "https://kr.seniormbti.com"
             },
             "datePublished": new Date().toISOString(),
             "inLanguage": "ko-KR",
@@ -136,19 +136,19 @@ export default function ResultLayout({ children, params }) {
                 "@type": "ListItem",
                 "position": 1,
                 "name": "시니어 MBTI 홈",
-                "item": "https://senior-mbti-qwnq47jj8-seniormbtis-projects.vercel.app"
+                "item": "https://kr.seniormbti.com"
               },
               {
                 "@type": "ListItem",
                 "position": 2,
                 "name": "성격 테스트 설문조사",
-                "item": "https://senior-mbti-qwnq47jj8-seniormbtis-projects.vercel.app/survey"
+                "item": "https://kr.seniormbti.com/survey"
               },
               {
                 "@type": "ListItem",
                 "position": 3,
                 "name": `${resultId} 유형 결과`,
-                "item": `https://senior-mbti-qwnq47jj8-seniormbtis-projects.vercel.app/result/${resultId.toLowerCase()}`
+                "item": `https://kr.seniormbti.com/result/${resultId.toLowerCase()}`
               }
             ]
           })

@@ -16,7 +16,7 @@ export const metadata = {
     description: '내 MBTI를 확인하고 상성 관계의 MBTI를 찾아보세요! 앞으로 남은 인생 동안 나와 인연을 맺으며 함께 살아갈 성향이 잘 맞는 사람을 파악할 수 있어요.',
     type: 'website',
     locale: 'ko_KR',
-    url: 'https://senior-mbti-qwnq47jj8-seniormbtis-projects.vercel.app',
+    url: 'https://kr.seniormbti.com',
     siteName: '시니어 MBTI',
     images: [
       {
@@ -78,11 +78,11 @@ export default function RootLayout({ children }) {
         <meta name="bingbot" content="index, follow" />
         
         {/* 다국어 SEO 최적화 */}
-        <link rel="alternate" hrefLang="ko" href="https://senior-mbti-qwnq47jj8-seniormbtis-projects.vercel.app/" />
-        <link rel="alternate" hrefLang="en" href="https://senior-mbti-l3zee5a4g-seniormbtis-projects.vercel.app/" />
-        <link rel="alternate" hrefLang="zh" href="https://senior-mbti-k71r0f94e-seniormbtis-projects.vercel.app/" />
-        <link rel="alternate" hrefLang="ja" href="https://senior-mbti-nkth90d1y-seniormbtis-projects.vercel.app/" />
-        <link rel="alternate" hrefLang="x-default" href="https://senior-mbti-qwnq47jj8-seniormbtis-projects.vercel.app/" />
+        <link rel="alternate" hrefLang="ko" href="https://kr.seniormbti.com/" />
+        <link rel="alternate" hrefLang="en" href="https://seniormbti.com/" />
+        <link rel="alternate" hrefLang="zh" href="https://cn.seniormbti.com/" />
+        <link rel="alternate" hrefLang="ja" href="https://jp.seniormbti.com/" />
+        <link rel="alternate" hrefLang="x-default" href="https://kr.seniormbti.com/" />
         
         {/* 성능 최적화 */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -107,7 +107,7 @@ export default function RootLayout({ children }) {
               "name": "시니어 MBTI",
               "alternateName": "중장년 성격 유형 테스트",
               "description": "60대+ 시니어를 위한 전문 MBTI 성격 유형 테스트. 은퇴 후 인생 설계와 인간관계 개선을 위한 심리 분석 도구",
-              "url": "https://senior-mbti-qwnq47jj8-seniormbtis-projects.vercel.app",
+              "url": "https://kr.seniormbti.com",
               "applicationCategory": "LifestyleApplication",
               "operatingSystem": "Web Browser",
               "offers": {
@@ -119,7 +119,7 @@ export default function RootLayout({ children }) {
               "provider": {
                 "@type": "Organization",
                 "name": "시니어 MBTI 전문연구팀",
-                "url": "https://senior-mbti-qwnq47jj8-seniormbtis-projects.vercel.app"
+                "url": "https://kr.seniormbti.com"
               },
               "audience": {
                 "@type": "Audience",
