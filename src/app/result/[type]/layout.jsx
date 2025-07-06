@@ -39,7 +39,7 @@ const mbtiDescriptions = {
 };
 
 export async function generateMetadata({ params }) {
-  const resultId = params.id.toUpperCase();
+  const resultId = params.type.toUpperCase();
   const keywords = mbtiKeywords[resultId] || `${resultId}, MBTI 결과, 시니어 MBTI, 성격 유형, MBTI 상성, 궁합`;
   const description = mbtiDescriptions[resultId] || `${resultId} 성격 유형의 상세한 분석 결과입니다. 내 MBTI와 잘 맞는 성향, 잘 맞지 않는 성향을 확인하고 앞으로 남은 인생 동안 함께할 이상적인 동반자를 찾아보세요.`;
   
@@ -84,7 +84,7 @@ export async function generateMetadata({ params }) {
 }
 
 export default function ResultLayout({ children, params }) {
-  const resultId = params.id.toUpperCase();
+  const resultId = params.type.toUpperCase();
   
   return (
     <>
