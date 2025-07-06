@@ -284,6 +284,11 @@ export default function SurveyPage() {
     setIsSubmitting(true);
     
     try {
+      // 클라이언트 사이드에서만 실행되도록 보장
+      if (typeof window === 'undefined') {
+        throw new Error('Client-side only function called on server');
+      }
+
       // MBTI 유형 계산
       const scores = { E: 0, I: 0, S: 0, N: 0, T: 0, F: 0, J: 0, P: 0 };
       
@@ -306,24 +311,31 @@ export default function SurveyPage() {
                          'ISTJ', 'ISFJ', 'ESTJ', 'ESFJ', 'ISTP', 'ISFP', 'ESTP', 'ESFP'];
       
       if (validTypes.includes(mbtiType)) {
-        // localStorage에 저장 (백업용)
-        const resultData = {
-          mbtiType,
-          scores,
-          answers: finalAnswers,
-          completedAt: new Date().toISOString(),
-          language: 'ko'
-        };
-        
-        localStorage.setItem(`mbti-result-${mbtiType}`, JSON.stringify(resultData));
+        // localStorage에 안전하게 저장
+        try {
+          const resultData = {
+            mbtiType,
+            scores,
+            answers: finalAnswers,
+            completedAt: new Date().toISOString(),
+            language: 'ko'
+          };
+          
+          localStorage.setItem(`mbti-result-${mbtiType}`, JSON.stringify(resultData));
+          console.log('Result data saved to localStorage');
+        } catch (storageError) {
+          console.warn('Failed to save to localStorage:', storageError);
+          // localStorage 실패해도 계속 진행
+        }
         
         console.log('About to redirect to:', `/result/${mbtiType.toLowerCase()}`);
         
-        // 안정적인 네비게이션을 위한 추가 지연
-        await new Promise(resolve => setTimeout(resolve, 200));
+        // 안정적인 네비게이션을 위한 지연
+        await new Promise(resolve => setTimeout(resolve, 300));
         
-        // replace를 사용하여 뒤로가기 문제 방지
-        router.replace(`/result/${mbtiType.toLowerCase()}`);
+        // window.location 사용으로 더 안정적인 리디렉션
+        window.location.href = `/result/${mbtiType.toLowerCase()}`;
+        
       } else {
         throw new Error(`Invalid MBTI type calculated: ${mbtiType}`);
       }
@@ -332,6 +344,13 @@ export default function SurveyPage() {
       console.error('Error calculating results:', error);
       alert('결과 계산 중 오류가 발생했습니다. 다시 시도해주세요.');
       setIsSubmitting(false);
+      
+      // 오류 발생 시 홈으로 리디렉션
+      if (typeof window !== 'undefined') {
+        setTimeout(() => {
+          window.location.href = '/';
+        }, 2000);
+      }
     }
   };
 
