@@ -330,11 +330,18 @@ export default function SurveyPage() {
         
         console.log('About to redirect to:', `/result/${mbtiType.toLowerCase()}`);
         
-        // 안정적인 네비게이션을 위한 지연
-        await new Promise(resolve => setTimeout(resolve, 300));
+        // 완료 메시지 표시 후 자동 리디렉션 (2초)
+        await new Promise(resolve => setTimeout(resolve, 2000));
         
-        // window.location 사용으로 더 안정적인 리디렉션
-        window.location.href = `/result/${mbtiType.toLowerCase()}`;
+        // Next.js router 사용으로 확실한 리디렉션
+        router.push(`/result/${mbtiType.toLowerCase()}`);
+        
+        // 백업 리디렉션 (router.push 실패 시)
+        setTimeout(() => {
+          if (typeof window !== 'undefined') {
+            window.location.href = `/result/${mbtiType.toLowerCase()}`;
+          }
+        }, 500);
         
       } else {
         throw new Error(`Invalid MBTI type calculated: ${mbtiType}`);
