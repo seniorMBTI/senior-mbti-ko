@@ -20,7 +20,7 @@ export const metadata = {
     siteName: '시니어 MBTI',
     images: [
       {
-        url: '/kr.png',
+        url: 'https://kr.seniormbti.com/kr.png',
         width: 1200,
         height: 630,
         alt: '시니어 MBTI 성격 유형 테스트 - 내 MBTI와 상성 관계 확인하기'
@@ -31,7 +31,7 @@ export const metadata = {
     card: 'summary_large_image',
     title: '시니어 MBTI - 내 MBTI와 상성 관계 확인하기',
     description: '내 MBTI를 확인하고 상성 관계의 MBTI를 찾아보세요! 앞으로 남은 인생 동안 나와 인연을 맺으며 함께 살아갈 성향이 잘 맞는 사람을 파악할 수 있어요.',
-    images: ['/kr.png']
+    images: ['https://kr.seniormbti.com/kr.png']
   },
   robots: {
     index: true,
