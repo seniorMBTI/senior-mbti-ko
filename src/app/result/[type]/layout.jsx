@@ -54,20 +54,11 @@ export async function generateMetadata({ params }) {
       locale: 'ko_KR',
       url: `https://kr.seniormbti.com/result/${resultId}`,
       siteName: '시니어 MBTI',
-      images: [
-        {
-          url: `https://kr.seniormbti.com/${resultId}-kr.png`,
-          width: 1200,
-          height: 630,
-          alt: `${resultId} 성격 유형 결과 - 시니어 MBTI`
-        }
-      ]
     },
     twitter: {
       card: 'summary_large_image',
       title: `시니어 MBTI 결과 - ${resultId} 유형`,
       description: `${resultId} 성격 유형의 상세한 분석 결과입니다. 내 MBTI와 잘 맞는 성향, 잘 맞지 않는 성향을 확인해보세요.`,
-      images: [`https://kr.seniormbti.com/${resultId}-kr.png`]
     },
     robots: {
       index: true,
